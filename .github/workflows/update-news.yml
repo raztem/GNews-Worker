@@ -13,21 +13,22 @@ jobs:
       - name: Клонування репозиторію
         uses: actions/checkout@v2
 
-      - name: Виконання API-запиту
+      - name: Виконання API-запиту (тимчасово в новий файл)
         run: |
-          curl -s "https://gnews.io/api/v4/top-headlines?category=ukraine&lang=en&country=uk&max=2&apikey=${{ secrets.GNEWS_API_KEY }}" -o news.json
+          curl -s "https://gnews.io/api/v4/top-headlines?category=ukraine&lang=en&country=uk&max=2&apikey=${{ secrets.GNEWS_API_KEY }}" -o new_news.json
       
+      - name: Перевірка, чи є нові дані
+        run: |
+          if cmp -s new_news.json news.json; then
+            echo "No new updates, skipping commit."
+            exit 0
+          fi
+          mv new_news.json news.json
+
       - name: Налаштування Git
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-
-      - name: Перевірка змін у news.json
-        run: |
-          if git diff --exit-code news.json; then
-            echo "No changes detected, skipping commit."
-            exit 0
-          fi
 
       - name: Коміт змін та пуш
         env:
