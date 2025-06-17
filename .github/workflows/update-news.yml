@@ -15,7 +15,7 @@ jobs:
 
       - name: Виконання API-запиту (тимчасово в новий файл)
         run: |
-          curl -s "https://gnews.io/api/v4/top-headlines?category=general&lang=en&country=any&max=10&apikey=${{ secrets.GNEWS_API_KEY }}" -o new_news.json
+          curl -s "https://gnews.io/api/v4/top-headlines?category=general&lang=uk&country=uk&max=10&apikey=${{ secrets.GNEWS_API_KEY }}" -o new_news.json
       
       - name: Перевірка, чи є нові дані
         run: |
